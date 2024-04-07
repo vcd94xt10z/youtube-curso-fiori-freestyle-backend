@@ -186,6 +186,11 @@ method OVCABSET_GET_ENTITYSET.
   ENDLOOP.
   CONCATENATE LINES OF lt_orderby INTO ld_orderby SEPARATED BY ''.
 
+  " ordenação obrigatória caso nenhuma seja definida
+  IF ld_orderby = '' .
+    ld_orderby = 'OrdemId ASCENDING'.
+  ENDIF.
+
   SELECT *
     FROM zovcab
    WHERE (IV_FILTER_STRING)
@@ -210,8 +215,36 @@ ORDER BY (ld_orderby)
 endmethod.
 
 
-  method OVCABSET_UPDATE_ENTITY.
-  endmethod.
+method OVCABSET_UPDATE_ENTITY.
+  DATA(lo_msg) = me->/iwbep/if_mgw_conv_srv_runtime~get_message_container( ).
+
+  io_data_provider->read_entry_data(
+    IMPORTING
+      es_data = er_entity
+  ).
+
+  er_entity-ordemid = it_key_tab[ name = 'OrdemId' ]-value.
+
+  UPDATE zovcab
+     SET clienteid  = er_entity-clienteid
+         totalitens = er_entity-totalitens
+         totalfrete = er_entity-totalfrete
+         totalordem = er_entity-totalordem
+         status     = er_entity-status
+   WHERE ordemid    = er_entity-ordemid.
+
+  IF sy-subrc <> 0.
+    lo_msg->add_message_text_only(
+      EXPORTING
+        iv_msg_type = 'E'
+        iv_msg_text = 'Erro ao atualizar ordem'
+    ).
+
+    RAISE EXCEPTION type /iwbep/cx_mgw_busi_exception
+      EXPORTING
+        message_container = lo_msg.
+  ENDIF.
+endmethod.
 
 
 method OVITEMSET_CREATE_ENTITY.
@@ -337,6 +370,37 @@ method OVITEMSET_GET_ENTITYSET.
 endmethod.
 
 
-  method OVITEMSET_UPDATE_ENTITY.
-  endmethod.
+method OVITEMSET_UPDATE_ENTITY.
+  DATA(lo_msg) = me->/iwbep/if_mgw_conv_srv_runtime~get_message_container( ).
+
+  io_data_provider->read_entry_data(
+    IMPORTING
+      es_data = er_entity
+  ).
+
+  er_entity-ordemid  = it_key_tab[ name = 'OrdemId' ]-value.
+  er_entity-itemid   = it_key_tab[ name = 'ItemId' ]-value.
+  er_entity-precotot = er_entity-quantidade * er_entity-precouni.
+
+  UPDATE zovitem
+     SET material   = er_entity-material
+         descricao  = er_entity-descricao
+         quantidade = er_entity-quantidade
+         precouni   = er_entity-precouni
+         precotot   = er_entity-precotot
+   WHERE ordemid    = er_entity-ordemid
+     AND itemid     = er_entity-itemid.
+
+  IF sy-subrc <> 0.
+    lo_msg->add_message_text_only(
+      EXPORTING
+        iv_msg_type = 'E'
+        iv_msg_text = 'Erro ao atualizar item'
+    ).
+
+    RAISE EXCEPTION type /iwbep/cx_mgw_busi_exception
+      EXPORTING
+        message_container = lo_msg.
+  ENDIF.
+endmethod.
 ENDCLASS.
