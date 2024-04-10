@@ -182,8 +182,8 @@ endmethod.
 method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~EXECUTE_ACTION.
   DATA: ld_ordemid  TYPE zovcab-ordemid.
   DATA: ld_status   TYPE zovcab-status.
-  DATA: lt_bapiret2 TYPE STANDARD TABLE OF zcl_zov_mpc_ext=>ts_mensagem.
-  DATA: ls_bapiret2 TYPE zcl_zov_mpc_ext=>ts_mensagem.
+  DATA: lt_bapiret2 TYPE STANDARD TABLE OF zcl_zov_mpc_ext=>mensagem2.
+  DATA: ls_bapiret2 TYPE zcl_zov_mpc_ext=>mensagem2.
 
   IF iv_action_name = 'ZFI_ATUALIZA_STATUS'.
     ld_ordemid = it_parameter[ name = 'ID_ORDEMID' ]-value.
@@ -195,13 +195,13 @@ method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~EXECUTE_ACTION.
 
     IF sy-subrc = 0.
       CLEAR ls_bapiret2.
-      ls_bapiret2-type    = 'S'.
-      ls_bapiret2-message = 'Status atualizado'.
+      ls_bapiret2-tipo    = 'S'.
+      ls_bapiret2-mensagem = 'Status atualizado'.
       APPEND ls_bapiret2 TO lt_bapiret2.
     ELSE.
       CLEAR ls_bapiret2.
-      ls_bapiret2-type    = 'E'.
-      ls_bapiret2-message = 'Erro ao atualizar status'.
+      ls_bapiret2-tipo    = 'E'.
+      ls_bapiret2-mensagem = 'Erro ao atualizar status'.
       APPEND ls_bapiret2 TO lt_bapiret2.
     ENDIF.
   ENDIF.
