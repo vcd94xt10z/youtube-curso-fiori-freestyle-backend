@@ -299,19 +299,21 @@ method OVCABSET_DELETE_ENTITY.
   ENDIF.
 
   DELETE FROM zovitem WHERE ordemid = ls_key_tab-value.
-  IF sy-subrc <> 0.
-    ROLLBACK WORK.
-
-    lo_msg->add_message_text_only(
-      EXPORTING
-        iv_msg_type = 'E'
-        iv_msg_text = 'Erro ao remover itens'
-    ).
-
-    RAISE EXCEPTION type /iwbep/cx_mgw_busi_exception
-      EXPORTING
-        message_container = lo_msg.
-  ENDIF.
+  " Vinicius 28/04/2024 - Comentando validação pois algumas ordens podem
+  " não tem itens
+*  IF sy-subrc <> 0.
+*    ROLLBACK WORK.
+*
+*    lo_msg->add_message_text_only(
+*      EXPORTING
+*        iv_msg_type = 'E'
+*        iv_msg_text = 'Erro ao remover itens'
+*    ).
+*
+*    RAISE EXCEPTION type /iwbep/cx_mgw_busi_exception
+*      EXPORTING
+*        message_container = lo_msg.
+*  ENDIF.
 
   DELETE FROM zovcab WHERE ordemid = ls_key_tab-value.
   IF sy-subrc <> 0.
