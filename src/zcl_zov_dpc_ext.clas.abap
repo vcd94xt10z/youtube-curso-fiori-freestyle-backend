@@ -195,13 +195,13 @@ method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~EXECUTE_ACTION.
 
     IF sy-subrc = 0.
       CLEAR ls_bapiret2.
-      ls_bapiret2-tipo    = 'S'.
-      ls_bapiret2-mensagem = 'Status atualizado'.
+      ls_bapiret2-tipo     = 'S'.
+      ls_bapiret2-mensagem = |Status da ordem { ld_ordemid } atualizado|.
       APPEND ls_bapiret2 TO lt_bapiret2.
     ELSE.
       CLEAR ls_bapiret2.
-      ls_bapiret2-tipo    = 'E'.
-      ls_bapiret2-mensagem = 'Erro ao atualizar status'.
+      ls_bapiret2-tipo     = 'E'.
+      ls_bapiret2-mensagem = |Erro ao atualizar status da ordem { ld_ordemid }|.
       APPEND ls_bapiret2 TO lt_bapiret2.
     ENDIF.
   ENDIF.
