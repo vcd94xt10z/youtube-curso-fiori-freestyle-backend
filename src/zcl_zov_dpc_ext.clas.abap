@@ -50,13 +50,14 @@ CLASS ZCL_ZOV_DPC_EXT IMPLEMENTATION.
 
 
 method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~CREATE_DEEP_ENTITY.
-  DATA : ls_deep_entity TYPE zcl_zov_mpc_ext=>ty_ordem_item.
-  DATA : ls_deep_item   TYPE zcl_zov_mpc_ext=>ts_ovitem.
+  DATA : ls_deep_entity  TYPE zcl_zov_mpc_ext=>ty_ordem_item.
+  DATA : ls_deep_item    TYPE zcl_zov_mpc_ext=>ts_ovitem.
 
-  DATA : ls_cab         TYPE zovcab.
-  DATA : lt_item        TYPE STANDARD TABLE OF zovitem.
-  DATA : ls_item        TYPE zovitem.
-  DATA : ld_updkz       TYPE char1.
+  DATA : ls_cab          TYPE zovcab.
+  DATA : lt_item         TYPE STANDARD TABLE OF zovitem.
+  DATA : ls_item         TYPE zovitem.
+  DATA : ld_updkz        TYPE char1.
+  DATA : ld_datahora(14) TYPE c.
 
   DATA(lo_msg) = me->/iwbep/if_mgw_conv_srv_runtime~get_message_container( ).
 
@@ -70,9 +71,14 @@ method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~CREATE_DEEP_ENTITY.
 
     MOVE-CORRESPONDING ls_deep_entity TO ls_cab.
 
-    ls_cab-criacao_data    = sy-datum.
-    ls_cab-criacao_hora    = sy-uzeit.
-    ls_cab-criacao_usuario = sy-uname.
+    "ls_cab-criacao_data    = sy-datum.
+    "ls_cab-criacao_hora    = sy-uzeit.
+    "ls_cab-criacao_usuario = sy-uname.
+
+    ld_datahora            = ls_deep_entity-datacriacao.
+    ls_cab-criacao_data    = ld_datahora(8).
+    ls_cab-criacao_hora    = ld_datahora+8(6).
+    ls_cab-criacao_usuario = ls_deep_entity-criadopor.
 
     SELECT SINGLE MAX( ordemid )
       INTO ls_cab-ordemid
@@ -92,7 +98,7 @@ method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~CREATE_DEEP_ENTITY.
     ls_cab-status     = ls_deep_entity-status.
     ls_cab-totalitens = ls_deep_entity-totalitens.
     ls_cab-totalfrete = ls_deep_entity-totalfrete.
-    ls_cab-totalordem = ls_deep_entity-totalordem.
+    ls_cab-totalordem = ls_cab-totalitens * ls_cab-totalfrete.
   ENDIF.
 
   " item
