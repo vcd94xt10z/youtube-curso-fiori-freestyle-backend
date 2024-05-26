@@ -170,7 +170,7 @@ method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~CREATE_DEEP_ENTITY.
   CONVERT DATE ls_cab-criacao_data
           TIME ls_cab-criacao_hora
           INTO TIME STAMP ls_deep_entity-datacriacao
-          TIME ZONE sy-zonlo.
+          TIME ZONE 'UTC'. "sy-zonlo.
 
   " item
   LOOP AT ls_deep_entity-toovitem ASSIGNING FIELD-SYMBOL(<ls_deep_item>).
@@ -282,7 +282,7 @@ method OVCABSET_CREATE_ENTITY.
     DATE ls_cab-criacao_data
     TIME ls_cab-criacao_hora
     INTO TIME STAMP er_entity-datacriacao
-    TIME ZONE sy-zonlo.
+    TIME ZONE 'UTC'. "sy-zonlo.
 endmethod.
 
 
@@ -375,7 +375,7 @@ method OVCABSET_GET_ENTITY.
     CONVERT DATE ls_cab-criacao_data
             TIME ls_cab-criacao_hora
        INTO TIME STAMP er_entity-datacriacao
-       TIME ZONE sy-zonlo.
+       TIME ZONE 'UTC'. "sy-zonlo.
   ELSE.
     lo_msg->add_message_text_only(
       EXPORTING
@@ -434,7 +434,7 @@ ORDER BY (ld_orderby)
     CONVERT DATE ls_cab-criacao_data
             TIME ls_cab-criacao_hora
        INTO TIME STAMP ls_entityset-datacriacao
-       TIME ZONE sy-zonlo.
+       TIME ZONE 'UTC'. "sy-zonlo.
 
     APPEND ls_entityset TO et_entityset.
   ENDLOOP.
