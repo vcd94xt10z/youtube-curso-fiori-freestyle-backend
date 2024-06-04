@@ -98,7 +98,7 @@ method /IWBEP/IF_MGW_APPL_SRV_RUNTIME~CREATE_DEEP_ENTITY.
     ls_cab-status     = ls_deep_entity-status.
     ls_cab-totalitens = ls_deep_entity-totalitens.
     ls_cab-totalfrete = ls_deep_entity-totalfrete.
-    ls_cab-totalordem = ls_cab-totalitens * ls_cab-totalfrete.
+    ls_cab-totalordem = ls_cab-totalitens + ls_cab-totalfrete.
   ENDIF.
 
   " item
