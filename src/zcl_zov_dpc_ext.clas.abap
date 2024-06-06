@@ -410,7 +410,7 @@ method OVCABSET_GET_ENTITYSET.
     APPEND |{ ls_order-property } { ls_order-order }|
         TO lt_orderby.
   ENDLOOP.
-  CONCATENATE LINES OF lt_orderby INTO ld_orderby SEPARATED BY ''.
+  CONCATENATE LINES OF lt_orderby INTO ld_orderby SEPARATED BY ', '. " Ajuste 05/06/2024
 
   " ordenação obrigatória caso nenhuma seja definida
   IF ld_orderby = '' .
